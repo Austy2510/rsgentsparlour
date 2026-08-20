@@ -1,5 +1,6 @@
 import { useState, type ReactNode, type FormEvent } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import logoImage from '@assets/ChatGPT_Image_Aug_17,_2026,_10_53_24_AM_1787234854496.png';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -95,7 +96,7 @@ function Home() {
       <header className="fixed inset-x-0 top-0 z-40 border-b border-[#c99a3d]/20 bg-[#120f0b]/85 backdrop-blur-xl">
         <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
           <a href="#top" className="group flex items-center gap-3" aria-label="RS Gents home">
-            <span className="rs-mark transition-transform duration-500 group-hover:rotate-[-4deg]" aria-hidden="true">RS</span>
+            <img className="h-14 w-14 object-contain transition-transform duration-500 group-hover:rotate-[-4deg] sm:h-16 sm:w-16" src={logoImage} alt="R.S Gents Parlour & Spa Center logo" />
             <span className="hidden border-l border-[#c99a3d]/30 pl-3 text-[10px] font-bold uppercase leading-[1.35] tracking-[.26em] text-[#d5b16a] sm:block">
               For men only<br /><span className="font-medium tracking-[.17em] text-[#8e806b]">Parlour & spa center</span>
             </span>
