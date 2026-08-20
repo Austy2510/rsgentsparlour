@@ -1,4 +1,4 @@
-import { useState, type ReactNode, type FormEvent } from 'react';
+import { useState, type ReactNode, type FormEvent, useRef } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import logoImage from '@assets/ChatGPT_Image_Aug_17,_2026,_10_53_24_AM_1787234854496.png';
 import { ErrorBoundary } from '@/components/error-boundary';
@@ -11,9 +11,13 @@ import {
   Check,
   ChevronRight,
   Clock3,
+  Droplets,
+  Gem,
+  Hand,
   Instagram,
   MapPin,
   Menu,
+  Palette,
   Phone,
   Scissors,
   Sparkles,
@@ -72,11 +76,114 @@ const packages = [
   { name: 'The Full Reset', detail: 'Cut · facial · manicure + pedicure · body massage · hair spa', price: '4500/-' },
 ];
 
+const detailedMenu = [
+  {
+    category: "Hair Treatment",
+    icon: "droplets" as const,
+    accent: "#c99a3d",
+    items: [
+      { name: "Hot Oil & Head Massage", price: "500/-" },
+      { name: "Dandruff Wash", price: "500/-" },
+      { name: "Hair Spa", price: "1200/-" },
+      { name: "Herbal Hair Treatment", price: "800/-" },
+      { name: "Hair Straightening", price: "4000/-" },
+      { name: "Hair Rebonding", price: "3000/-" },
+    ]
+  },
+  {
+    category: "Body Massage & Spa",
+    icon: "hand" as const,
+    accent: "#d4a84c",
+    items: [
+      { name: "Manicure", price: "500/-" },
+      { name: "Pedicure", price: "700/-" },
+      { name: "Foot Massage (30 Minutes)", price: "1000/-" },
+      { name: "Body Massage (60 Minutes)", price: "1500/-" },
+      { name: "Thai Body Massage", price: "2000/-" },
+      { name: "Hot Oil Massage & Full Body Massage", price: "1800/-" },
+      { name: "Hand & Leg Wax", price: "2000/-" },
+      { name: "Full Body Wax", price: "4000/-" },
+      { name: "Half Body Scrub (Herbal)", price: "1500/-" },
+      { name: "Full Body Scrub (Herbal)", price: "2700/-" },
+      { name: "Half Body Scrub (Gold)", price: "1800/-" },
+      { name: "Full Body Scrub (Gold)", price: "3500/-" },
+    ]
+  },
+  {
+    category: "Hair Color",
+    icon: "palette" as const,
+    accent: "#e2bb64",
+    items: [
+      { name: "L'Oréal Hair Color", price: "1000/-" },
+      { name: "JK Hair Color", price: "1200/-" },
+      { name: "Revlon Hair Color", price: "700/-" },
+      { name: "Bigen Hair Color", price: "600/-" },
+      { name: "Mark Hair Color", price: "600/-" },
+      { name: "Burgundy Hair Color (Garnier)", price: "600/-" },
+      { name: "High-Speed Hair Color", price: "600/-" },
+      { name: "Garnier Hair Color (Black)", price: "500/-" },
+      { name: "L'Oréal Beard Color", price: "300/-" },
+      { name: "High-Speed Beard Color", price: "300/-" },
+      { name: "Mark Beard Color", price: "300/-" },
+      { name: "Highlight Hair Color (Per Step)", price: "200/-" },
+      { name: "Highlight Hair Color (10 Steps)", price: "1500/-" },
+      { name: "Pakistani Mehendi Hair Color", price: "500/-" },
+      { name: "Beard Mehendi", price: "200/-" },
+    ]
+  },
+  {
+    category: "Facial",
+    icon: "gem" as const,
+    accent: "#f2d886",
+    items: [
+      { name: "Gold Bleach (Single)", price: "500/-" },
+      { name: "Mini Facial", price: "500/-" },
+      { name: "Herbal/Mint Facial", price: "600/-" },
+      { name: "Sandalwood Herbal Facial", price: "700/-" },
+      { name: "Japanese Facial", price: "800/-" },
+      { name: "Gold Bleach (Double)", price: "900/-" },
+      { name: "Gold Facial (3 Pack)", price: "800/-" },
+      { name: "Diamond Facial (3 Pack)", price: "800/-" },
+      { name: "Pimple Facial", price: "1000/-" },
+      { name: "Kesar Sandalwood Facial", price: "1200/-" },
+      { name: "Shahnaz Herbal Facial", price: "1400/-" },
+      { name: "Shahnaz Gold Facial", price: "1550/-" },
+      { name: "Gold Facial (5 Pack)", price: "1450/-" },
+      { name: "Diamond Facial (5 Pack)", price: "1550/-" },
+      { name: "Hydra Facial", price: "4000/-" },
+    ]
+  },
+  {
+    category: "Regular Hair Cutting",
+    icon: "scissors" as const,
+    accent: "#c99a3d",
+    items: [
+      { name: "Regular Hair Cutting", price: "150/-" },
+      { name: "Catalog Hair Cutting", price: "200/-" },
+      { name: "Gel Shave", price: "150/-" },
+      { name: "Beard Trimming", price: "100/-" },
+      { name: "Beard Styling & Cutting", price: "150/-" },
+      { name: "Regular Facial", price: "300/-" },
+      { name: "Herbal Facial", price: "500/-" },
+    ]
+  }
+];
+
+const categoryIcons: Record<string, typeof Scissors> = {
+  droplets: Droplets,
+  hand: Hand,
+  palette: Palette,
+  gem: Gem,
+  scissors: Scissors,
+};
+
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingOpen, setBookingOpen] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [selectedService, setSelectedService] = useState('');
+  const [activeCategory, setActiveCategory] = useState(0);
+  const menuRef = useRef<HTMLDivElement>(null);
 
   const openBooking = (service = '') => {
     setSelectedService(service);
@@ -133,7 +240,9 @@ function Home() {
         <section className="relative isolate flex min-h-[720px] items-end overflow-hidden border-b border-[#c99a3d]/20 bg-[radial-gradient(circle_at_78%_25%,rgba(201,154,61,.18),transparent_24%),linear-gradient(135deg,#120f0b_0%,#21180d_48%,#0f0c09_100%)] pt-[76px] sm:min-h-[820px] lg:min-h-[800px]">
           <div className="hero-pattern absolute inset-0 -z-10 opacity-50" />
           <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(18,15,11,.18),rgba(18,15,11,.62)_62%,#120f0b_100%)]" />
-          <div className="absolute right-[8%] top-[17%] -z-10 hidden select-none font-serif text-[clamp(12rem,28vw,30rem)] leading-none text-[#d4a84c]/[.06] lg:block">RS</div>
+          <div className="absolute right-[5%] top-[45%] -z-10 hidden -translate-y-1/2 select-none opacity-30 lg:block">
+            <img src={logoImage} alt="RS Gents Logo" className="w-[clamp(18rem,32vw,38rem)] h-auto object-contain" />
+          </div>
           <div className="mx-auto w-full max-w-7xl px-5 pb-16 sm:px-8 sm:pb-24 lg:px-10 lg:pb-28">
             <div className="max-w-[650px]">
               <div className="reveal-up flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.38em] text-[#e3b754]">
@@ -218,6 +327,99 @@ function Home() {
                 </button>
               ))}
             </div>
+
+            <div className="mt-28 border-t border-[#c99a3d]/20 pt-20" ref={menuRef}>
+              <div className="mb-16 text-center">
+                <p className="text-[10px] font-bold uppercase tracking-[.35em] text-[#c99a3d]">Every detail, priced</p>
+                <h3 className="rs-display mt-4 text-4xl tracking-[-.02em] text-[#f1e3ca] sm:text-5xl">Full Service Menu</h3>
+                <div className="mx-auto mt-6 h-px w-24 bg-gradient-to-r from-transparent via-[#c99a3d] to-transparent" />
+              </div>
+
+              {/* Category Tabs */}
+              <div className="mb-12 flex flex-wrap justify-center gap-3">
+                {detailedMenu.map((cat, idx) => {
+                  const IconComp = categoryIcons[cat.icon];
+                  return (
+                    <button
+                      key={cat.category}
+                      type="button"
+                      onClick={() => setActiveCategory(idx)}
+                      className={`group relative flex items-center gap-2.5 px-5 py-3 text-[11px] font-bold uppercase tracking-[.18em] transition-all duration-300 ${
+                        activeCategory === idx
+                          ? 'border border-[#c99a3d] bg-[#c99a3d]/15 text-[#f2d886] shadow-[0_0_20px_rgba(201,154,61,.15)]'
+                          : 'border border-[#c99a3d]/20 bg-[#1a140e] text-[#8e806b] hover:border-[#c99a3d]/40 hover:text-[#d5b16a]'
+                      }`}
+                    >
+                      <IconComp size={15} strokeWidth={1.5} />
+                      <span className="hidden sm:inline">{cat.category}</span>
+                      <span className="sm:hidden">{cat.category.split(' ')[0]}</span>
+                      {activeCategory === idx && (
+                        <span className="absolute -bottom-px left-1/2 h-0.5 w-8 -translate-x-1/2 bg-gradient-to-r from-transparent via-[#c99a3d] to-transparent" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Active Category Content */}
+              {detailedMenu.map((cat, catIdx) => {
+                if (catIdx !== activeCategory) return null;
+                const IconComp = categoryIcons[cat.icon];
+                return (
+                  <div key={cat.category} className="animate-in fade-in duration-500">
+                    {/* Category Header Card */}
+                    <div className="relative mb-8 overflow-hidden border border-[#c99a3d]/20 bg-gradient-to-br from-[#1e170f] to-[#120f0b] p-8 sm:p-10">
+                      <div className="absolute -right-6 -top-6 opacity-[0.04]">
+                        <IconComp size={180} strokeWidth={0.5} />
+                      </div>
+                      <div className="relative flex items-center gap-4">
+                        <div className="flex h-14 w-14 items-center justify-center border border-[#c99a3d]/40 bg-[#c99a3d]/10">
+                          <IconComp size={24} strokeWidth={1.2} className="text-[#e4bc62]" />
+                        </div>
+                        <div>
+                          <h4 className="rs-display text-2xl text-[#f1e3ca] sm:text-3xl">{cat.category}</h4>
+                          <p className="mt-1 text-[12px] text-[#8e806b]">{cat.items.length} services available</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Service Items Grid */}
+                    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                      {cat.items.map((item, itemIdx) => (
+                        <button
+                          key={item.name}
+                          type="button"
+                          onClick={() => openBooking(item.name)}
+                          className="group relative flex items-center justify-between gap-4 overflow-hidden border border-[#c99a3d]/15 bg-[#1a140e] px-5 py-4 text-left transition-all duration-300 hover:-translate-y-0.5 hover:border-[#c99a3d]/40 hover:bg-[#21180d] hover:shadow-[0_4px_20px_rgba(201,154,61,.08)]"
+                        >
+                          <div className="absolute -left-4 -top-4 rs-display text-[3rem] font-bold leading-none text-[#c99a3d]/[0.06] transition-colors group-hover:text-[#c99a3d]/[0.12]">
+                            {String(itemIdx + 1).padStart(2, '0')}
+                          </div>
+                          <div className="relative min-w-0 flex-1">
+                            <span className="block truncate text-[14px] font-medium text-[#cfbda0] transition-colors group-hover:text-[#f1e3ca]">{item.name}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="rs-display text-[18px] font-semibold text-[#d8ad56]">{item.price}</span>
+                            <ArrowUpRight size={14} className="text-[#c99a3d] opacity-0 transition-all duration-300 group-hover:opacity-100" />
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+
+                    {/* Bottom CTA */}
+                    <div className="mt-8 flex items-center justify-center gap-6 border-t border-[#c99a3d]/15 pt-8">
+                      <p className="text-[12px] text-[#8e806b]">All prices in BDT. Walk-in or call to reserve.</p>
+                      <button
+                        type="button"
+                        onClick={() => openBooking(cat.category)}
+                        className="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.18em] text-[#e3b95d] transition-colors hover:text-[#f2d886]"
+                      >
+                        Book {cat.category} <ArrowUpRight size={14} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}            </div>
           </div>
         </section>
 
