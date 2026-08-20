@@ -129,7 +129,7 @@ function Home() {
       </header>
 
       <main id="top">
-        <section className="relative isolate flex min-h-[720px] items-end overflow-hidden border-b border-[#c99a3d]/20 pt-[76px] sm:min-h-[820px] lg:min-h-[800px]">
+        <section className="relative isolate flex min-h-[720px] items-end overflow-hidden border-b border-[#c99a3d]/20 bg-[radial-gradient(circle_at_78%_25%,rgba(201,154,61,.18),transparent_24%),linear-gradient(135deg,#120f0b_0%,#21180d_48%,#0f0c09_100%)] pt-[76px] sm:min-h-[820px] lg:min-h-[800px]">
           <div className="hero-pattern absolute inset-0 -z-10 opacity-50" />
           <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(18,15,11,.18),rgba(18,15,11,.62)_62%,#120f0b_100%)]" />
           <div className="absolute right-[8%] top-[17%] -z-10 hidden select-none font-serif text-[clamp(12rem,28vw,30rem)] leading-none text-[#d4a84c]/[.06] lg:block">RS</div>
