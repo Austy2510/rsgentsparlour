@@ -1,13 +1,5 @@
 import { useState, type ReactNode, type FormEvent } from 'react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import heroImage from '@assets/772036909_122097467091438574_7106238632393321061_n_1787233519835.png';
-import crestImage from '@assets/767222481_122095483395438574_3910241143647670809_n_1787233529944.jpg';
-import packagesImage from '@assets/774726836_122102562207438574_5822835965810538616_n_1787233545471.jpg';
-import colorPoster from '@assets/Untitled-5_1787233484796.jpg';
-import treatmentPoster from '@assets/Untitled-1_1787233484796.jpg';
-import cutPoster from '@assets/Untitled-2_1787233484796.jpg';
-import facialPoster from '@assets/Untitled-3_1787233484796.jpg';
-import spaPoster from '@assets/Untitled-4_1787233484797.jpg';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { Toaster } from '@/components/ui/toaster';
 import { TooltipProvider } from '@/components/ui/tooltip';
@@ -36,17 +28,6 @@ import {
 
 const queryClient = new QueryClient();
 
-const imageAssets: Record<string, string> = {
-  '772036909_122097467091438574_7106238632393321061_n_1787233519835.png': heroImage,
-  '767222481_122095483395438574_3910241143647670809_n_1787233529944.jpg': crestImage,
-  '774726836_122102562207438574_5822835965810538616_n_1787233545471.jpg': packagesImage,
-  'Untitled-5_1787233484796.jpg': colorPoster,
-  'Untitled-1_1787233484796.jpg': treatmentPoster,
-  'Untitled-2_1787233484796.jpg': cutPoster,
-  'Untitled-3_1787233484796.jpg': facialPoster,
-  'Untitled-4_1787233484797.jpg': spaPoster,
-};
-const asset = (name: string) => imageAssets[name] ?? name;
 const phoneOne = '880 17391-76722';
 const phoneTwo = '880 18135-66454';
 
@@ -55,35 +36,30 @@ const services = [
     title: 'Hair colour',
     eyebrow: 'A considered change',
     description: 'L’Oréal, Revlon, Garnier and high-speed colour work with the finish to match.',
-    image: asset('Untitled-5_1787233484796.jpg'),
     number: '01',
   },
   {
     title: 'Hair treatment',
     eyebrow: 'Reset the texture',
     description: 'From hot oil and head massage to hair spa, straightening and rebonding.',
-    image: asset('Untitled-1_1787233484796.jpg'),
     number: '02',
   },
   {
     title: 'Cut & beard',
     eyebrow: 'The daily signature',
     description: 'Regular cuts, catalogue cuts, clean shaves and beard styling with intent.',
-    image: asset('Untitled-2_1787233484796.jpg'),
     number: '03',
   },
   {
     title: 'Facial',
     eyebrow: 'Good skin, quietly',
     description: 'Herbal, Japanese, gold, diamond and Hydra facials for a rested face.',
-    image: asset('Untitled-3_1787233484796.jpg'),
     number: '04',
   },
   {
     title: 'Body massage & spa',
     eyebrow: 'Leave lighter',
     description: 'Massage, scrub, wax, manicure and pedicure when you need a proper pause.',
-    image: asset('Untitled-4_1787233484797.jpg'),
     number: '05',
   },
 ];
@@ -119,7 +95,7 @@ function Home() {
       <header className="fixed inset-x-0 top-0 z-40 border-b border-[#c99a3d]/20 bg-[#120f0b]/85 backdrop-blur-xl">
         <div className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-5 sm:px-8 lg:px-10">
           <a href="#top" className="group flex items-center gap-3" aria-label="RS Gents home">
-            <img className="h-12 w-12 object-contain transition-transform duration-500 group-hover:rotate-[-4deg]" src={asset('767222481_122095483395438574_3910241143647670809_n_1787233529944.jpg')} alt="RS Gents crest" />
+            <span className="rs-mark transition-transform duration-500 group-hover:rotate-[-4deg]" aria-hidden="true">RS</span>
             <span className="hidden border-l border-[#c99a3d]/30 pl-3 text-[10px] font-bold uppercase leading-[1.35] tracking-[.26em] text-[#d5b16a] sm:block">
               For men only<br /><span className="font-medium tracking-[.17em] text-[#8e806b]">Parlour & spa center</span>
             </span>
@@ -154,9 +130,9 @@ function Home() {
 
       <main id="top">
         <section className="relative isolate flex min-h-[720px] items-end overflow-hidden border-b border-[#c99a3d]/20 pt-[76px] sm:min-h-[820px] lg:min-h-[800px]">
-          <img src={asset('772036909_122097467091438574_7106238632393321061_n_1787233519835.png')} alt="RS Gents barber at work" className="hero-image absolute inset-0 -z-20 h-full w-full object-cover object-center opacity-70" />
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,#120f0b_0%,rgba(18,15,11,.78)_28%,rgba(18,15,11,.17)_68%,#120f0b_100%)]" />
-          <div className="absolute inset-0 -z-10 bg-[linear-gradient(0deg,#120f0b_0%,transparent_44%,rgba(18,15,11,.25)_100%)]" />
+          <div className="hero-pattern absolute inset-0 -z-10 opacity-50" />
+          <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(18,15,11,.18),rgba(18,15,11,.62)_62%,#120f0b_100%)]" />
+          <div className="absolute right-[8%] top-[17%] -z-10 hidden select-none font-serif text-[clamp(12rem,28vw,30rem)] leading-none text-[#d4a84c]/[.06] lg:block">RS</div>
           <div className="mx-auto w-full max-w-7xl px-5 pb-16 sm:px-8 sm:pb-24 lg:px-10 lg:pb-28">
             <div className="max-w-[650px]">
               <div className="reveal-up flex items-center gap-3 text-[10px] font-bold uppercase tracking-[.38em] text-[#e3b754]">
@@ -228,8 +204,8 @@ function Home() {
               {services.map((service, index) => (
                 <button type="button" key={service.title} onClick={() => openBooking(service.title)} className={`service-card group relative overflow-hidden border border-[#c99a3d]/25 bg-[#1a140e] text-left ${index === 0 ? 'sm:col-span-2 lg:col-span-2' : ''} ${index === 4 ? 'sm:col-span-2 lg:col-span-1' : ''}`}>
                   <div className={`relative overflow-hidden ${index === 0 ? 'aspect-[1.22]' : 'aspect-[.82] sm:aspect-[.76]'}`}>
-                    <img src={service.image} alt={`${service.title} service menu`} className="h-full w-full object-cover object-top" />
-                    <div className="service-overlay absolute inset-0 bg-[linear-gradient(0deg,rgba(15,10,5,.96),rgba(15,10,5,.05)_65%)] opacity-90" />
+                    <div className="service-number absolute left-5 top-5 rs-display text-[clamp(4rem,8vw,7rem)] leading-none text-[#d4a84c]/20">{service.number}</div>
+                    <div className="service-icon absolute right-5 top-5 flex h-12 w-12 items-center justify-center border border-[#d4a84c]/45 text-[#e4bc62]"><Scissors size={20} strokeWidth={1.2} /></div>
                     <span className="absolute right-4 top-4 text-[10px] font-bold tracking-[.2em] text-[#e2b957]">{service.number}</span>
                     <div className="absolute inset-x-5 bottom-5">
                       <p className="text-[9px] font-bold uppercase tracking-[.25em] text-[#e4bc62]">{service.eyebrow}</p>
@@ -274,8 +250,13 @@ function Home() {
           <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-10">
             <div className="grid items-center gap-10 lg:grid-cols-[1.1fr_.9fr]">
               <div className="relative overflow-hidden border border-[#c99a3d]/30">
-                <img src={asset('774726836_122102562207438574_5822835965810538616_n_1787233545471.jpg')} alt="RS Gents package menu" className="w-full object-cover transition-transform duration-700 hover:scale-[1.02]" />
-                <div className="pointer-events-none absolute inset-0 border-[10px] border-[#120f0b]/20" />
+                <div className="package-art-ring absolute h-[260px] w-[260px] rounded-full border border-[#d4a84c]/35" />
+                <div className="package-art-ring absolute h-[205px] w-[205px] rounded-full border border-[#d4a84c]/20" />
+                <div className="relative text-center">
+                  <span className="block text-[10px] font-bold uppercase tracking-[.45em] text-[#d4a84c]">For men only</span>
+                  <span className="rs-display mt-3 block text-[clamp(6rem,14vw,10rem)] leading-none text-[#ecd18e]">RS</span>
+                  <span className="mt-2 block text-[10px] font-bold uppercase tracking-[.3em] text-[#b69b63]">Parlour & spa center</span>
+                </div>
               </div>
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[.35em] text-[#c99a3d]">A little more than maintenance</p>
