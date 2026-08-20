@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "RS Gents Salon"
+description = "A premium landing page for RS Gents, a men's salon and spa offering haircuts, hair treatments, color, facials, massage, and grooming services."
+version = "1.0.0"
+id = "artifacts/rs-gents-salon"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 25296
+
+[services.development]
+run = "pnpm --filter @workspace/rs-gents-salon run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/rs-gents-salon", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/rs-gents-salon/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "25296"
+BASE_PATH = "/"
